@@ -103,6 +103,9 @@ async function getPhoto(searchText){
         close: true,                
         animationSpeed: 250,
     });
+    lightbox.on('close.simplelightbox', function () {
+     lightbox.close();
+    });
     
     }
     else {
