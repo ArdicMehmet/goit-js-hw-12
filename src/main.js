@@ -33,6 +33,7 @@ const galleryDOM = document.querySelector('.gallery');
 const base_url = "https://pixabay.com/api/?"
 const searchInput = document.querySelector('.searchInput');
 const loadmoreDOM = document.querySelector('.load-btn');
+let cardHeight;
 const api_key = "46048347-9d88aa79f4238f227ee13ac9b"
 // const messageContainerDOM = document.querySelector('.messageContainer'); 
 let lightbox;
@@ -46,7 +47,7 @@ async function getPhoto(searchText){
   if(page == 1){
     refresh();
   }
-  lightbox ? lightbox.close() : '';
+  
   const full_url = `${base_url}key=${api_key}&q=${searchText}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${page}`;
   
   try {
@@ -57,6 +58,9 @@ async function getPhoto(searchText){
       throw new Error(`Response status: ${response.status}`);
     }
     loadingDOM.style.display = "none";
+    if(lightbox){
+      lightbox.close();
+    }
     const images = response.data;
     if(images?.hits.length > 0){
       searchInput.value = "";
@@ -87,6 +91,7 @@ async function getPhoto(searchText){
         fragment.appendChild(li);
       })
       galleryDOM.appendChild(fragment);
+      page !== 1 ? window.scrollBy( window.scrollY ,cardHeight*2) : '';
       lightbox = new SimpleLightbox('.gallery a', {
         captions: true,             
         captionsData: 'alt',       
@@ -99,13 +104,6 @@ async function getPhoto(searchText){
         animationSpeed: 250,
     });
     
-    lightbox.on('show.simplelightbox', function () {
-      console.log('Modal is shown');
-    });
-    
-    lightbox.on('close.simplelightbox', function () {
-      console.log('Modal is closed');
-    });
     }
     else {
       // messageContainerDOM.style.display = "flex";
@@ -154,5 +152,9 @@ search_btn.addEventListener('click', _ => {
 
 loadmoreDOM.addEventListener('click', _ => {
   page++;
+  
+  cardHeight = document.querySelector('.gallery a').getBoundingClientRect().height;
+  console.log(cardHeight);
   getPhoto(last_search_text);
+  
 })
