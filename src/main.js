@@ -42,7 +42,6 @@ function refresh(){
   galleryDOM.innerHTML="";
 }
 
-
 async function getPhoto(searchText){
   if(page == 1){
     refresh();
@@ -113,6 +112,7 @@ async function getPhoto(searchText){
       // closeBtn.addEventListener('click', () => {
       //   messageContainerDOM.style.display = "none";
       // })
+      loadmoreDOM.style.display = "none";
       iziToast.show({
         theme: 'custom',
         icon: 'fas fa-exclamation-circle',
@@ -143,6 +143,7 @@ search_btn.addEventListener('click', _ => {
     page = 1
     last_search_text = searchText;
     getPhoto(last_search_text);
+    loadmoreDOM.style.display ="inline-block";
   }
   else {
     alert("Search input cant be empty");

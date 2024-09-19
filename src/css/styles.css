@@ -65,7 +65,9 @@ button:hover{
   background-color: #6C8CFF;
   cursor: pointer;
 }
-
+.load-btn{
+  display: none;
+}
 /* .messageContainer{
   position: absolute;
   right: 36px;
