@@ -31,17 +31,22 @@ const loadingDOM = document.querySelector('.loading');
 const search_btn = document.querySelector('.searchBtn');
 const galleryDOM = document.querySelector('.gallery');
 const base_url = "https://pixabay.com/api/?"
+const loadmoreDOM = document.querySelector('.load-btn');
 const api_key = "46048347-9d88aa79f4238f227ee13ac9b"
 // const messageContainerDOM = document.querySelector('.messageContainer'); 
 
+let last_search_text = '';
+let page = 1;
 function refresh(){
   galleryDOM.innerHTML="";
 }
 
 const searchInput = document.querySelector('.searchInput');
 async function getPhoto(searchText){
-  refresh();
-  const full_url = `${base_url}key=${api_key}&q=${searchText}&image_type=photo&orientation=horizontal&safesearch=true&per_page=9`;
+  if(page == 1){
+    refresh();
+  }
+  const full_url = `${base_url}key=${api_key}&q=${searchText}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${page}`;
   
   try {
     loadingDOM.style.display = "block";
@@ -134,7 +139,9 @@ search_btn.addEventListener('click', _ => {
   const searchText = searchInput.value.trim();
   
   if(searchText){
-    getPhoto(searchText);
+    page = 1
+    last_search_text = searchText;
+    getPhoto(last_search_text);
   }
   else {
     alert("Search input cant be empty");
@@ -142,3 +149,7 @@ search_btn.addEventListener('click', _ => {
 })
 
 
+loadmoreDOM.addEventListener('click', _ => {
+  page++;
+  getPhoto(last_search_text);
+})
