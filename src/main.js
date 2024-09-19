@@ -35,7 +35,7 @@ const searchInput = document.querySelector('.searchInput');
 const loadmoreDOM = document.querySelector('.load-btn');
 const api_key = "46048347-9d88aa79f4238f227ee13ac9b"
 // const messageContainerDOM = document.querySelector('.messageContainer'); 
-
+let lightbox;
 let last_search_text = '';
 let page = 1;
 function refresh(){
@@ -46,6 +46,7 @@ async function getPhoto(searchText){
   if(page == 1){
     refresh();
   }
+  lightbox ? lightbox.close() : '';
   const full_url = `${base_url}key=${api_key}&q=${searchText}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${page}`;
   
   try {
@@ -86,7 +87,7 @@ async function getPhoto(searchText){
         fragment.appendChild(li);
       })
       galleryDOM.appendChild(fragment);
-      const lightbox = new SimpleLightbox('.gallery a', {
+      lightbox = new SimpleLightbox('.gallery a', {
         captions: true,             
         captionsData: 'alt',       
         captionDelay: 250,         
