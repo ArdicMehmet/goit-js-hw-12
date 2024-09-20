@@ -42,7 +42,22 @@ let page = 1;
 function refresh(){
   galleryDOM.innerHTML="";
 }
-
+function showMessage(message){
+  iziToast.show({
+    theme: 'custom',
+    icon: 'fas fa-exclamation-circle',
+    message: message,
+    position: 'topRight',
+    progressBarColor: '#B51B1B',
+    onOpening: function(instance, toast){
+        console.info('Modal is open');
+    },
+    onClosing: function(instance, toast, closedBy){
+        console.info('closedBy: ' + closedBy); 
+        instance.message='';
+    }
+});
+}
 async function getPhoto(searchText){
   if(page == 1){
     refresh();
@@ -92,20 +107,26 @@ async function getPhoto(searchText){
       })
       galleryDOM.appendChild(fragment);
       page !== 1 ? window.scrollBy( window.scrollY ,cardHeight*2) : '';
-      lightbox = new SimpleLightbox('.gallery a', {
-        captions: true,             
-        captionsData: 'alt',       
-        captionDelay: 250,         
-        showCounter: true,          
-        enableKeyboard: true,      
-        loop: true,                
-        nav: true,                 
-        close: true,                
-        animationSpeed: 250,
-    });
-    lightbox.on('close.simplelightbox', function () {
-     lightbox.close();
-    });
+      if(!lightbox){
+        lightbox = new SimpleLightbox('.gallery a', {
+          captions: true,             
+          captionsData: 'alt',       
+          captionDelay: 250,         
+          showCounter: true,          
+          enableKeyboard: true,      
+          loop: true,                
+          nav: true,                 
+          close: true,                
+          animationSpeed: 250,
+      });
+      lightbox.on('close.simplelightbox', function () {
+        lightbox.close();
+       });
+      }
+      else{
+        lightbox.refresh();
+      }
+    
     
     }
     else {
@@ -115,19 +136,7 @@ async function getPhoto(searchText){
       //   messageContainerDOM.style.display = "none";
       // })
       loadmoreDOM.style.display = "none";
-      iziToast.show({
-        theme: 'custom',
-        icon: 'fas fa-exclamation-circle',
-        message: 'Sorry, there are no images matching your search query. Please, try again!',
-        position: 'topRight',
-        progressBarColor: '#B51B1B',
-        onOpening: function(instance, toast){
-            console.info('Modal is open');
-        },
-        onClosing: function(instance, toast, closedBy){
-            console.info('closedBy: ' + closedBy); // tells if it was closed by 'drag' or 'button'
-        }
-    });
+      showMessage("Sorry, there are no images matching your search query. Please, try again!");
     }
     
     
